@@ -26,3 +26,16 @@ target_link_libraries(flowers
         PRIVATE ftxui::screen
         PRIVATE ftxui::dom
         PRIVATE ftxui::component)
+
+add_executable(snake
+        snake/bitmap.h
+        snake/bitmap.cpp
+        snake/board.h
+        snake/board.cpp
+        snake/game.h
+        snake/game.cpp
+        snake/main.cpp)
+target_link_libraries(snake
+        PRIVATE ftxui::screen
+        PRIVATE ftxui::dom
+        PRIVATE ftxui::component)
