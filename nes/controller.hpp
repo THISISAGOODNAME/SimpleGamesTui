@@ -35,6 +35,11 @@ class Controller {
         state_ &= ~(static_cast<std::underlying_type_t<Button>>(b));
     }
 
+    void clear()
+    {
+        state_ = 0;
+    }
+
    public:
     auto read() -> Byte
     {

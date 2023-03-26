@@ -104,18 +104,25 @@ int main(int argc, const char* argv[]) {
         return window(text("SimpleNES"), canvas(c));
     }), [&](const Event &e) {
         if (e == Event::ArrowUp) {
+            controller1_.clear();
             controller1_.press(nesterm::Controller::Button::Up);
         } else if (e == Event::ArrowDown) {
+            controller1_.clear();
             controller1_.press(nesterm::Controller::Button::Down);
         } else if (e == Event::ArrowLeft) {
+            controller1_.clear();
             controller1_.press(nesterm::Controller::Button::Left);
         } else if (e == Event::ArrowRight) {
+            controller1_.clear();
             controller1_.press(nesterm::Controller::Button::Right);
         } else if (e == Event::Backspace) {
+            controller1_.clear();
             controller1_.press(nesterm::Controller::Button::Select);
         } else if (e == Event::Return) {
+            controller1_.clear();
             controller1_.press(nesterm::Controller::Button::Start);
         } else if (e.is_character()) {
+            controller1_.clear();
             if ("z" == e.character()) {
                 controller1_.press(nesterm::Controller::Button::A);
             }
