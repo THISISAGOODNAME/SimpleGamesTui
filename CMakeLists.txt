@@ -33,3 +33,15 @@ target_link_libraries(snake
         PRIVATE ftxui::screen
         PRIVATE ftxui::dom
         PRIVATE ftxui::component)
+
+add_subdirectory(3rd_party/SimpleNES)
+add_executable(nes
+        nes/controller.hpp
+        nes/emulator.hpp
+        nes/main.cpp)
+target_link_libraries(nes
+        PRIVATE ftxui::screen
+        PRIVATE ftxui::dom
+        PRIVATE ftxui::component
+        PRIVATE SimpleNES)
+
