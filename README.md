@@ -12,6 +12,14 @@ Simple Games in wihout GUI
 
 ![snake](screenshots/snake.png)
 
+## nes simulator
+
+![mario](screenshots/Snipaste_2023-03-26_15-26-16.png)
+
+![contra](screenshots/Snipaste_2023-03-26_15-27-10.png)
+
+![Ninja Gaiden](screenshots/Snipaste_2023-03-26_15-30-14.png)
+
 # links
 
 - https://github.com/ArthurSonzogni/FTXUI

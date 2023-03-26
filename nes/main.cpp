@@ -79,7 +79,7 @@ int main(int argc, const char* argv[]) {
         while (!next_buffer_.has_value())
             emulator_.step();  // Might set next_buffer_
 
-        auto c = Canvas(nes_width, nes_height);
+        auto c = Canvas(nes_width*2, nes_height*2);
 
         for (int x = 0; x < nes_width; x++) {
             for (int y = 0; y < nes_height; ++y) {
@@ -89,19 +89,46 @@ int main(int argc, const char* argv[]) {
                 auto const green = static_cast<uint8_t>(pixelColor >> 8U);
                 auto const blue = static_cast<uint8_t>(pixelColor);
 
-//                c.DrawText(x, y, std::string{ 1, ' ' }, [red, green, blue](ftxui::Pixel &p) {
-//                    p.foreground_color = ftxui::Color::RGB(red, green, blue);
-//                    p.background_color = ftxui::Color::RGB(red, green, blue);
-//                    p.bold = true;
-//                });
+                auto pixelColor2 = color_palette[buf[x][y+1]];
+                auto const red2 = static_cast<uint8_t>(pixelColor2 >> 16U);
+                auto const green2 = static_cast<uint8_t>(pixelColor2 >> 8U);
+                auto const blue2 = static_cast<uint8_t>(pixelColor2);
 
-                c.DrawPoint(x, y, true, Color::RGB(red, green, blue));
+                c.DrawText(x*2, y*2, std::string{  "▀" }, [red, green, blue, red2, green2, blue2](ftxui::Pixel &p) {
+                    p.foreground_color = ftxui::Color::RGB(red, green, blue);
+                    p.background_color = ftxui::Color::RGB(red2, green2, blue2);
+                    p.bold = true;
+                });
             }
         }
+
+//        Elements array;
+//        int x_length = nes_width;
+//        int y_length = nes_height;
+//
+//        for (int y = 0; y < y_length; y += 2) {
+//            Elements line;
+//            for (int x = 0; x < x_length; ++x) {
+//                sn::Framebuffer const& buf = *next_buffer_;
+//                auto pixelColor = color_palette[buf[x][y]];
+//                auto const red = static_cast<uint8_t>(pixelColor >> 16U);
+//                auto const green = static_cast<uint8_t>(pixelColor >> 8U);
+//                auto const blue = static_cast<uint8_t>(pixelColor);
+//
+//                auto pixelColor2 = color_palette[buf[x][y+1]];
+//                auto const red2 = static_cast<uint8_t>(pixelColor2 >> 16U);
+//                auto const green2 = static_cast<uint8_t>(pixelColor2 >> 8U);
+//                auto const blue2 = static_cast<uint8_t>(pixelColor2);
+//
+//                line.push_back(text(L"▀") | color(Color::RGB(red, green, blue)) | bgcolor(Color::RGB(red2, green2, blue2)));
+//            }
+//            array.push_back(hbox(std::move(line)));
+//        }
 
         next_buffer_ = std::nullopt;
 
         return window(text("SimpleNES"), canvas(c));
+//        return window(text("SimpleNES"), vbox(array));
     }), [&](const Event &e) {
         if (e == Event::ArrowUp) {
             controller1_.clear();
