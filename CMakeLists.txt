@@ -8,6 +8,7 @@ option(FTXUI_BUILD_EXAMPLES OFF)
 option(FTXUI_ENABLE_INSTALL OFF)
 add_subdirectory(3rd_party/FTXUI)
 
+# flower
 add_executable(flowers
         flowers/bitmap.h
         flowers/bitmap.cpp
@@ -21,6 +22,7 @@ target_link_libraries(flowers
         PRIVATE ftxui::dom
         PRIVATE ftxui::component)
 
+# snake
 add_executable(snake
         snake/bitmap.h
         snake/bitmap.cpp
@@ -34,6 +36,7 @@ target_link_libraries(snake
         PRIVATE ftxui::dom
         PRIVATE ftxui::component)
 
+# nes emu (SimpleNes backend)
 add_subdirectory(3rd_party/SimpleNES)
 add_executable(nes
         nes/controller.hpp
@@ -45,3 +48,13 @@ target_link_libraries(nes
         PRIVATE ftxui::component
         PRIVATE SimpleNES)
 
+# nes emu (agnes backend)
+add_executable(nes-agnes
+        nes-agnes/agnes.h
+        nes-agnes/agnes.c
+        nes-agnes/main.cpp)
+target_link_libraries(nes-agnes
+        PRIVATE ftxui::screen
+        PRIVATE ftxui::dom
+        PRIVATE ftxui::component
+        PRIVATE SimpleNES)

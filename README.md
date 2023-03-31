@@ -28,3 +28,4 @@ Simple Games in wihout GUI
 - https://github.com/chximn/CPU
 - https://github.com/a-n-t-h-o-n-y/TermOx
 - https://github.com/a-n-t-h-o-n-y/NES-Term
+- https://github.com/kgabis/agnes
