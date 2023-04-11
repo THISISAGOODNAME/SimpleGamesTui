@@ -11,8 +11,29 @@
 #include "ftxui/screen/color.hpp"
 
 #include "NES.h"
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
 
-constexpr int AUDIO_FRAME_BUFFER_SIZE = 1024;
+void audio_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
+{
+    auto apu = (APU*)pDevice->pUserData;
+    if (apu == nullptr) {
+        return;
+    }
+
+    auto* outStream = (float*) pOutput;
+
+    apu->streamMutex.lock();
+    for (int i = 0; i < frameCount; i++) {
+        if (i < apu->stream.size()) {
+            float tmp = apu->stream.front();
+            outStream[i * 2 + 0] = tmp;
+            outStream[i * 2 + 1] = tmp;
+            apu->stream.erase(apu->stream.begin());
+        }
+    }
+    apu->streamMutex.unlock();
+}
 
 constexpr auto nes_width  = 256;
 constexpr auto nes_height = 240;
@@ -30,6 +51,30 @@ int main(int argc, const char* argv[]) {
     std::cout << "Initializing NES..." << std::endl;
     NES* nes = new NES(argv[1], SRAM_path);
     if (!nes->initialized) return EXIT_FAILURE;
+
+    // init miniaudio
+    ma_device_config deviceConfig;
+    ma_device device;
+
+    deviceConfig = ma_device_config_init(ma_device_type_playback);
+    deviceConfig.playback.format = ma_format_f32;
+    deviceConfig.playback.channels = 2;
+    deviceConfig.sampleRate = 44100;
+//    deviceConfig.noFixedSizedCallback = false;
+//    deviceConfig.periodSizeInFrames = 64;
+    deviceConfig.dataCallback = audio_callback;
+    deviceConfig.pUserData = nes->apu;
+
+    if (ma_device_init(nullptr, &deviceConfig, &device) != MA_SUCCESS) {
+        std::cout << "Failed to open playback device." << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    if (ma_device_start(&device) != MA_SUCCESS) {
+        std::cout << "Failed to start playback device." << std::endl;
+        ma_device_uninit(&device);
+        return EXIT_FAILURE;
+    }
 
     // input
     uint8_t controller1 = 0;
@@ -66,7 +111,8 @@ int main(int argc, const char* argv[]) {
                 auto const green2 = static_cast<uint8_t>(c2 >> 8U);
                 auto const red2 = static_cast<uint8_t>(c2);
 
-                line.push_back(text(L"▀") | color(Color::RGB(red, green, blue)) | bgcolor(Color::RGB(red2, green2, blue2)));
+//                line.push_back(text(L"▀") | color(Color::RGB(red, green, blue)) | bgcolor(Color::RGB(red2, green2, blue2)));
+                line.push_back(text(L"▀") | color(Color(red, green, blue)) | bgcolor(Color(red2, green2, blue2)));
             }
             array.push_back(hbox(std::move(line)));
         }
@@ -109,6 +155,8 @@ int main(int argc, const char* argv[]) {
             fclose(fp);
         }
     }
+
+    ma_device_uninit(&device);
 
     return 0;
 }

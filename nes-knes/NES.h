@@ -20,7 +20,8 @@
 // No external dependencies except for
 // those needed for interfacing:
 // 
-// - PortAudio for sound (http://www.portaudio.com/)
+// - <s>PortAudio for sound (http://www.portaudio.com/)</s>
+// - miniaudio for sound (https://github.com/mackron/miniaudio)
 // - GLFW for video (http://www.glfw.org/)
 //
 // If you compile GLFW yourself, be sure to specify
@@ -80,6 +81,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <vector>
+#include <mutex>
 
 //#include <portaudio.h>
 
@@ -222,6 +225,8 @@ struct Noise {
 
 struct APU {
 //	PaStream* stream;
+    std::vector<float> stream;
+    std::mutex streamMutex;
 	Pulse pulse1;
 	Pulse pulse2;
 	Triangle triangle;
