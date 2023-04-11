@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(testFTXUI)
+project(SimpleGamesTui)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -54,6 +54,19 @@ add_executable(nes-agnes
         nes-agnes/agnes.c
         nes-agnes/main.cpp)
 target_link_libraries(nes-agnes
+        PRIVATE ftxui::screen
+        PRIVATE ftxui::dom
+        PRIVATE ftxui::component
+        PRIVATE SimpleNES)
+
+# nes emu (knes backend)
+add_executable(nes-knes
+        nes-knes/NES.h
+        nes-knes/NES.cpp
+        nes-knes/cpu.cpp
+        nes-knes/memory.cpp
+        nes-knes/main.cpp)
+target_link_libraries(nes-knes
         PRIVATE ftxui::screen
         PRIVATE ftxui::dom
         PRIVATE ftxui::component

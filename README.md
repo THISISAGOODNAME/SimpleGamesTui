@@ -29,3 +29,5 @@ Simple Games in wihout GUI
 - https://github.com/a-n-t-h-o-n-y/TermOx
 - https://github.com/a-n-t-h-o-n-y/NES-Term
 - https://github.com/kgabis/agnes
+- https://github.com/komrad36/KNES
+- https://github.com/johnmph/NESEmu
